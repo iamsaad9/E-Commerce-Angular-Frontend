@@ -2,8 +2,9 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { jwtInterceptor } from './core/interceptors/jwt-interceptor';
+import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [

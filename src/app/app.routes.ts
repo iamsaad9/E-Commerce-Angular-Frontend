@@ -9,8 +9,15 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auth/pages/login/login').then((m) => m.Login),
   },
   {
-    path: '',
+    path: 'auth/register',
+    // canActivate: [guestGuard],
+    loadComponent: () => import('./features/auth/pages/register/register').then((m) => m.Register),
+  },
+
+  {
+    path: 'categories',
     canActivate: [authGuard],
-    loadComponent: () => import('./app').then((m) => m.App),
+    loadComponent: () =>
+      import('./features/categories/pages/categories/categories').then((m) => m.Categories),
   },
 ];

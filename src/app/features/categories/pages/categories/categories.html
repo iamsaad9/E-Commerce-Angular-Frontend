@@ -1,0 +1,27 @@
+<button class="rounded-md bg-blue-400 p-2" routerLink="/auth/login">Guard Redirect</button>
+<button class="rounded-md bg-red-400 p-2" (click)="onLogout()">Logout</button>
+<button class="rounded-md bg-orange-400 p-2" (click)="onGettingAllCategory()">
+  Get All Categories
+</button>
+<button class="rounded-md bg-pink-400 p-2" (click)="onGettingCategory(slug.value)">
+  Get Single Categories
+</button>
+
+<div class="flex flex-col gap-10">
+  <div>
+    <h1>Getting a single Category:</h1>
+    <input class="border p-2 rounded-xl" type="text" #slug placeholder="Enter slug" />
+    <h2 class="text-lg font-bold text-gray-900">
+      {{ categoriesService.category()?.category?.name }}
+    </h2>
+  </div>
+
+  <div>
+    <h1>Getting all he Caegories:</h1>
+    <ul>
+      @for (category of categoriesService.categories()?.categories; track category.id) {
+        <h2 class="text-lg font-bold text-gray-900">{{ category.name }}</h2>
+      }
+    </ul>
+  </div>
+</div>

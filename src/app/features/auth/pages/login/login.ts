@@ -1,15 +1,16 @@
 import { Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../../../core/auth/auth-service';
+import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginCommand } from '../../models/auth.model';
 import { CommonModule } from '@angular/common';
+import { ToastService } from '../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-login',
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.html',
-  styleUrl: './login.css',
+  // styleUrl: './login.css',
 })
 export class Login {
   private fb = inject(NonNullableFormBuilder);
@@ -24,6 +25,7 @@ export class Login {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
   });
+  private toastService = inject(ToastService);
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
@@ -39,7 +41,8 @@ export class Login {
     this.authService.login(command).subscribe({
       next: (response) => {
         if (response.success) {
-          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/categories';
+          this.toastService.show('Successfully Logined.', 'success', 4000);
           this.router.navigateByUrl(returnUrl);
         } else {
           this.errorMessage.set(response.message || 'Login failed.');
@@ -47,6 +50,11 @@ export class Login {
         }
       },
       error: (err) => {
+        const originalReturnUrl = this.route.snapshot.queryParams['returnUrl'] || '/categories';
+        this.router.navigate(['/auth/login'], {
+          queryParams: { returnUrl: originalReturnUrl },
+          queryParamsHandling: 'merge', // Tells Angular to maintain the original value cleanly without stacking!
+        });
         this.errorMessage.set(err.error.message || 'An unexpected error occured.');
         this.isLoading.set(false);
       },
